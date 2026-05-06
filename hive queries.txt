@@ -1,0 +1,82 @@
+start-dfs.sh
+start-yarn.sh
+which hive
+./hive
+show databases
+
+
+create database flight_info ;
+use flight_info;
+
+
+CREATE TABLE flights (
+
+flight_id INT ,
+fligtht_date INT ,
+carrier STRING,
+origin STRING,
+destination STRING,
+arr_delay INT,
+dep_delay INT
+)
+ROW FORMATED DELIMINATED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+
+INSERT INTO TABLE FLIGHT VALUES(101,20-05-2004,'AirIndia','abc','xyz',10,5)
+
+
+SELECT *FROM FLIGHT;
+
+
+ALTER TABLE FLIGHT ADD COLUMNS (
+flight_duration INT
+)
+
+
+CREATE EXTERNAL TABLE IF NOT EXISTS external_airports(
+
+airport_code STRING,
+airport_name STRING,
+city STRING,
+state STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE
+
+
+
+INSERT INTO TABLE external_airports VALUES('xyz','nnn','yyy','zzz')
+
+
+LOAD DATA LOCAL INPATH '/PATH ADD HERE' INTO TABLE external_airports
+
+
+SELECT f.flight_id, a.airport_name
+FROM flight_info f
+JOIN external_airport a
+ON f.origin= a.airport_code
+
+// both need to be same to join
+
+
+
+
+SELECT AVG(dep_delay) AS delay FROM flight_info where year = 2008
+
+or 
+
+SELECT 
+    fligtht_date,
+    AVG(dep_delay) AS avg_delay
+FROM flight_info
+WHERE year = 2008
+GROUP BY fligtht_date
+ORDER BY fligtht_date;
+
+
+CREATE INDEX flight_idx ON TABLE external_airports(airport_code)  AS 'COMPACT' WITH DEFERRED REBUILD
+
+ALTER INDEX flight_idx ON external_airports REBUILD
